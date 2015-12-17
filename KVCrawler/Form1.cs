@@ -42,7 +42,7 @@ namespace KVCrawler
             values.Add("PLZ", task.Plz.ToString());
             values.Add("start", task.Start.ToString());
             values.Add("Psychotherapeut", "na");
-            webclient.UploadValuesAsync(new Uri("http://www.kvberlin.de/60arztsuche/suche.php"), "POST", values, task);
+            webclient.UploadValuesAsync(new Uri("https://www.kvberlin.de/60arztsuche/suche.php"), "POST", values, task);
             threads++;
         }
 
