@@ -136,15 +136,21 @@ namespace KVCrawler
             //var fs = new StreamWriter(@"D:\daten.txt");
             //xml.Serialize(fs, ArztList);
             //fs.Close();
-
+            
+            
             db = Arzt.createDB();
             if (db != null)
             {
+                save_btn.Enabled = false;
+                
                 foreach (var item in ArztList)
                     item.InsertIntoDB(db);
             }
-
-            save_btn.Enabled = false;
+            else
+            {
+                save_btn.Enabled = true;
+            }
+           
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -190,6 +196,7 @@ namespace KVCrawler
         public string Name { get; set; }
         public Gender Geschlecht { get; set; }
         public List<string> Fach { get; set; }
+        public List<string> Schwerp { get; set; }
         public List<string> Zusatz { get; set; }
         public bool Hausarzt { get; set; }
         public string Straße { get; set; }
@@ -203,6 +210,7 @@ namespace KVCrawler
 
         private Regex rx_name_geschlecht = new Regex(@"<h1>(.+?)</h1>\s*<h4>niedergelassener? Kassen(\w+)(.*?)</h4>");
         private Regex rx_fach = new Regex(@"<p><b>Fachgebiete:</b></p><ul>(.+?)</ul>", RegexOptions.Singleline);
+        private Regex rx_schwerp = new Regex(@"<p><b>Schwerpunkte:</b></p><ul>(.+?)</ul>", RegexOptions.Singleline);
         private Regex rx_zusatz = new Regex(@"<p><b>Zusatzbezeichnungen:</b></p><ul>(.+?)</ul>", RegexOptions.Singleline);
         private Regex rx_listitems = new Regex(@"\s*<li>([^<]+)</li>");
         private Regex rx_hausarzt = new Regex(@"<p>Hausärztliche Versorgung: \w+</p>");
@@ -221,6 +229,7 @@ namespace KVCrawler
             ID = id;
             Plz = plz;
             Fach = new List<string>();
+            Schwerp = new List<string>();
             Zusatz = new List<string>();
             RetrieveDetails();
         }
@@ -265,6 +274,16 @@ namespace KVCrawler
                 foreach (Match item in listitems)
                     Fach.Add(strip(item.Groups[1].Value));
 
+                // neu
+                m = rx_schwerp.Match(response, m.Index);
+                if (m.Success)
+                {
+                    listitems = rx_listitems.Matches(m.Groups[1].Value);
+                    foreach (Match item in listitems)
+                        Schwerp.Add(strip(item.Groups[1].Value));
+                }
+                // neu ende
+
                 m = rx_zusatz.Match(response, m.Index);
                 if (m.Success)
                 {
@@ -307,10 +326,10 @@ namespace KVCrawler
             bool retVal = true;
 
             string strSQL = "INSERT INTO AerzteVZ " +
-                            "('ArztName','Geschlecht','Fach','Zusatz','Hausarzt','Plz','Ort','Strasse','Tel','Fax','Link')" +
-                            "VALUES ('" + Name + "','" + Geschlecht.ToString() + "','" + string.Join(", ", Fach) +
+                            "('ArztName','Geschlecht','Fach','Schwerpunkte','Zusatz','Hausarzt','Plz','Ort','Strasse','Tel','Fax','Link')" +
+                            "VALUES ('" + Name + "','" + Geschlecht.ToString() + "','" + string.Join(", ", Fach) +"','" + string.Join(", ", Schwerp) +
                             "','" + string.Join(", ", Zusatz) + "','" + (Hausarzt ? 'J' : 'N') + "'," + Plz.ToString() +
-                            ",'" + Ort + "','" + Straße + "','" + Telefon + "','" + Telefax + "','" + ID.ToString() + "');";
+                            ",'" + Ort + "','" + Straße + "','" + Telefon + "','" + Telefax + "','http://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID.ToString() + "');";
 
             System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand(strSQL, db);
 
@@ -352,6 +371,7 @@ namespace KVCrawler
                                                         "'ArztName' CHAR(255)," +
                                                         "'Geschlecht' CHAR(6)," +
                                                         "'Fach' CHAR(255)," +
+                                                        "'Schwerpunkte' CHAR(255)," +
                                                         "'Zusatz' CHAR(255)," +
                                                         "'Hausarzt' CHAR(6)," +
                                                         "'Plz' INTEGER," +
