@@ -23,6 +23,7 @@ namespace KVCrawler
         Stack<Workitem> todo;
         bool proceed;
         int threads;
+        System.Data.OleDb.OleDbConnection db = null;
 
         Regex rx_treffer = new Regex(@"<p>ergab (\d+) Treffer");
         Regex rx_arzt = new Regex(@"<tr>\s*<td class=""tabletext""><a href=""detail1.php\?id=(\d+)&go=0&Arztdataberechtigung=""");
@@ -84,6 +85,15 @@ namespace KVCrawler
         internal void AddArzt(Arzt a)
         {
             ArztList.Add(a);
+
+            if (db == null)
+            {
+                save_btn.Enabled = true;
+            }
+            else
+            {
+                a.InsertIntoDB(db);
+            }    
         }
 
         private void UpdateThreads()
@@ -98,6 +108,11 @@ namespace KVCrawler
 
         private void start_btn_Click(object sender, EventArgs e)
         {
+            foreach (var line in textBox1.Lines)
+            {
+                todo.Push(new Workitem() { Plz = int.Parse(line.Substring(0, 5)), Start = 1, recurse = true });
+            }
+
             if (todo.Count > 0)
             {
                 proceed = true;
@@ -105,6 +120,7 @@ namespace KVCrawler
                 StartRequest(todo.Pop());
                 UpdateThreads();
             }
+            start_btn.Enabled = false;
         }
 
         private void stopp_btn_Click(object sender, EventArgs e)
@@ -112,15 +128,7 @@ namespace KVCrawler
             proceed = false;
         }
 
-        private void load_btn_Click(object sender, EventArgs e)
-        {
-            foreach (var line in textBox1.Lines)
-            {
-                todo.Push(new Workitem() { Plz = int.Parse(line), Start = 1, recurse = true });
-            }
-            start_btn.Enabled = true;
-            load_btn.Enabled = false;
-        }
+
 
         private void save_btn_Click(object sender, EventArgs e)
         {
@@ -129,13 +137,25 @@ namespace KVCrawler
             //xml.Serialize(fs, ArztList);
             //fs.Close();
 
-            var db = Arzt.createDB();
+            db = Arzt.createDB();
             if (db != null)
             {
                 foreach (var item in ArztList)
                     item.InsertIntoDB(db);
-                db.Close();
             }
+
+            save_btn.Enabled = false;
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (db != null)
+                db.Close();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            start_btn.Enabled = true;
         }
     }
 
@@ -289,7 +309,7 @@ namespace KVCrawler
             string strSQL = "INSERT INTO AerzteVZ " +
                             "('ArztName','Geschlecht','Fach','Zusatz','Hausarzt','Plz','Ort','Strasse','Tel','Fax','Link')" +
                             "VALUES ('" + Name + "','" + Geschlecht.ToString() + "','" + string.Join(", ", Fach) +
-                            "','" + string.Join(", ", Zusatz) + "'," + (Hausarzt ? 'J' : 'N') + "," + Plz.ToString() +
+                            "','" + string.Join(", ", Zusatz) + "','" + (Hausarzt ? 'J' : 'N') + "'," + Plz.ToString() +
                             ",'" + Ort + "','" + Straße + "','" + Telefon + "','" + Telefax + "','" + ID.ToString() + "');";
 
             System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand(strSQL, db);

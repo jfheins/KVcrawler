@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.start_btn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -39,14 +40,12 @@
             this.threads_num = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.threads_lbl = new System.Windows.Forms.Label();
-            this.load_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.threads_num)).BeginInit();
             this.SuspendLayout();
             // 
             // start_btn
             // 
             this.start_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.start_btn.Enabled = false;
             this.start_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.start_btn.Location = new System.Drawing.Point(464, 9);
             this.start_btn.Name = "start_btn";
@@ -73,9 +72,9 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.IntegralHeight = false;
-            this.listBox1.Location = new System.Drawing.Point(154, 80);
+            this.listBox1.Location = new System.Drawing.Point(214, 80);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(383, 407);
+            this.listBox1.Size = new System.Drawing.Size(323, 407);
             this.listBox1.TabIndex = 4;
             // 
             // progressBar1
@@ -105,9 +104,11 @@
             this.textBox1.Location = new System.Drawing.Point(12, 80);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(136, 407);
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(196, 407);
             this.textBox1.TabIndex = 10;
-            this.textBox1.Text = "10585\r\n10587\r\n10589\r\n10623\r\n10625\r\n10627\r\n10629";
+            this.textBox1.Text = resources.GetString("textBox1.Text");
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // stopp_btn
             // 
@@ -174,24 +175,11 @@
             this.threads_lbl.Size = new System.Drawing.Size(0, 13);
             this.threads_lbl.TabIndex = 16;
             // 
-            // load_btn
-            // 
-            this.load_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.load_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.load_btn.Location = new System.Drawing.Point(364, 9);
-            this.load_btn.Name = "load_btn";
-            this.load_btn.Size = new System.Drawing.Size(94, 29);
-            this.load_btn.TabIndex = 17;
-            this.load_btn.Text = "PLZ laden";
-            this.load_btn.UseVisualStyleBackColor = true;
-            this.load_btn.Click += new System.EventHandler(this.load_btn_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 557);
-            this.Controls.Add(this.load_btn);
             this.Controls.Add(this.threads_lbl);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.threads_num);
@@ -205,6 +193,7 @@
             this.Controls.Add(this.start_btn);
             this.Name = "Form1";
             this.Text = "KV-Crawler";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.threads_num)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -224,7 +213,6 @@
         private System.Windows.Forms.NumericUpDown threads_num;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label threads_lbl;
-        private System.Windows.Forms.Button load_btn;
     }
 }
 
