@@ -161,9 +161,24 @@ namespace KVCrawler
         {
             start_btn.Enabled = true;
         }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex < 0)
+                return;
+
+            var a = ArztList[listBox1.SelectedIndex];
+
+            lbl_name.Text = a.Name;
+            lbl_plz.Text = a.Plz.ToString();
+            lbl_gender.Text = a.Geschlecht.ToString();
+            lbl_fach.Text = string.Join(", ", a.Fach);
+            lbl_schwerp.Text = string.Join(", ", a.Schwerp);
+            lbl_zusatz.Text = string.Join(", ", a.Zusatz);
+        }
     }
 
-	public enum Gender
+    public enum Gender
     {
         Male, Female
     }

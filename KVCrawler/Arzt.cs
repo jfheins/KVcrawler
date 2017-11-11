@@ -61,10 +61,16 @@ namespace KVCrawler
 
 		public void RetrieveDetails()
 		{
+            // Allgemeine Details
 			var wc = new WebClient();
 			wc.DownloadDataCompleted += ParseDetails;
-			wc.DownloadDataAsync(new Uri("http://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID));
-		}
+			wc.DownloadDataAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID));
+
+            // Qualifizierte Leistungen
+            wc = new WebClient();
+            wc.DownloadDataCompleted += ParseDetails2;
+            wc.DownloadDataAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail3.php?id=" + ID));
+        }
 
 		private void ParseDetails(Object sender, DownloadDataCompletedEventArgs e)
 		{
@@ -134,7 +140,14 @@ namespace KVCrawler
 			}
 		}
 
-		public override string ToString()
+
+        private void ParseDetails2(Object sender, DownloadDataCompletedEventArgs e)
+        {
+
+        }
+
+
+        public override string ToString()
 		{
 			return string.Format("{0} - {1}", ID, Name);
 		}
