@@ -48,6 +48,8 @@
             this.lbl_schwerp = new System.Windows.Forms.Label();
             this.lbl_plz = new System.Windows.Forms.Label();
             this.lbl_pending = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txt_searchqs = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.threads_num)).BeginInit();
             this.SuspendLayout();
             // 
@@ -194,7 +196,8 @@
             // 
             // lbl_name
             // 
-            this.lbl_name.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_name.AutoSize = true;
             this.lbl_name.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_name.Location = new System.Drawing.Point(676, 80);
@@ -205,7 +208,8 @@
             // 
             // lbl_gender
             // 
-            this.lbl_gender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_gender.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_gender.AutoSize = true;
             this.lbl_gender.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_gender.Location = new System.Drawing.Point(676, 110);
@@ -216,7 +220,8 @@
             // 
             // lbl_fach
             // 
-            this.lbl_fach.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_fach.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_fach.AutoSize = true;
             this.lbl_fach.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_fach.Location = new System.Drawing.Point(676, 125);
@@ -227,7 +232,8 @@
             // 
             // lbl_zusatz
             // 
-            this.lbl_zusatz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_zusatz.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_zusatz.AutoSize = true;
             this.lbl_zusatz.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_zusatz.Location = new System.Drawing.Point(676, 155);
@@ -238,7 +244,8 @@
             // 
             // lbl_schwerp
             // 
-            this.lbl_schwerp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_schwerp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_schwerp.AutoSize = true;
             this.lbl_schwerp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_schwerp.Location = new System.Drawing.Point(676, 140);
@@ -249,7 +256,8 @@
             // 
             // lbl_plz
             // 
-            this.lbl_plz.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbl_plz.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_plz.AutoSize = true;
             this.lbl_plz.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_plz.Location = new System.Drawing.Point(676, 95);
@@ -267,11 +275,32 @@
             this.lbl_pending.TabIndex = 24;
             this.lbl_pending.Text = "   ";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(304, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(129, 13);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "Suche nach QS-Leistung:";
+            // 
+            // txt_searchqs
+            // 
+            this.txt_searchqs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt_searchqs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_searchqs.Location = new System.Drawing.Point(439, 12);
+            this.txt_searchqs.Name = "txt_searchqs";
+            this.txt_searchqs.Size = new System.Drawing.Size(231, 21);
+            this.txt_searchqs.TabIndex = 26;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(865, 557);
+            this.Controls.Add(this.txt_searchqs);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.lbl_pending);
             this.Controls.Add(this.lbl_plz);
             this.Controls.Add(this.lbl_zusatz);
@@ -321,6 +350,8 @@
         private System.Windows.Forms.Label lbl_schwerp;
         private System.Windows.Forms.Label lbl_plz;
         private System.Windows.Forms.Label lbl_pending;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txt_searchqs;
     }
 }
 

@@ -25,7 +25,7 @@ namespace KVCrawler
         System.Data.OleDb.OleDbConnection db = null;
 
         Regex rx_treffer = new Regex(@"<p>ergab (\d+) Treffer");
-        Regex rx_arzt = new Regex(@"<tr>\s*<td class=""tabletext""><a href=""detail1.php\?id=(\d+)&go=0&Arztdataberechtigung=""");
+        Regex rx_arzt = new Regex(@"<tr>\s*<td class=""tabletext""><a href=""detail1.php\?id=(\d+)&go=0&Arztdataberechtigung=");
 
         public Form1()
         {
@@ -43,6 +43,7 @@ namespace KVCrawler
             values.Add("PLZ", task.Plz.ToString());
             values.Add("start", task.Start.ToString());
             values.Add("Psychotherapeut", "na");
+            values.Add("Arztdataberechtigung", txt_searchqs.Text);
             webclient.UploadValuesAsync(new Uri("https://www.kvberlin.de/60arztsuche/suche.php"), "POST", values, task);
             threads++;
         }
