@@ -4,6 +4,8 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace KVCrawler
 {
@@ -24,7 +26,9 @@ namespace KVCrawler
 		public string Telefon { get; set; }
 		public string Telefax { get; set; }
 
-		public event ArztAddCallback ParsingDone;
+        public List<string> QsLeistungen { get; set; }
+
+        public event ArztAddCallback ParsingDone;
 
 
 		private Regex rx_name_geschlecht = new Regex(@"<h1>(.+?)</h1>\s*<h4>niedergelassener? Kassen(\w+)(.*?)</h4>");
@@ -43,40 +47,39 @@ namespace KVCrawler
 			return Regex.Replace(Regex.Replace(str, @"[\s]+", " "), @"<br>\s?", "\r\n").Trim();
 		}
 
-		public Arzt(int id, int plz)
+		public Arzt(int id, int plz) : this()
 		{
 			ID = id;
 			Plz = plz;
-			Fach = new List<string>();
-			Schwerp = new List<string>();
-			Zusatz = new List<string>();
-			RetrieveDetails();
+			RetrieveDetailsAsync();
 		}
 
 		public Arzt()
 		{
 			Fach = new List<string>();
 			Zusatz = new List<string>();
-		}
+			Schwerp = new List<string>();
+            QsLeistungen = new List<string>();
+        }
 
-		public void RetrieveDetails()
+		public async void RetrieveDetailsAsync()
 		{
             // Allgemeine Details
 			var wc = new WebClient();
-			wc.DownloadDataCompleted += ParseDetails;
-			wc.DownloadDataAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID));
+            wc.Encoding = Encoding.GetEncoding("iso-8859-1");
+
+            var response = await wc.DownloadStringTaskAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID)).ConfigureAwait(false);
+            ParseDetails(response);
 
             // Qualifizierte Leistungen
-            wc = new WebClient();
-            wc.DownloadDataCompleted += ParseDetails2;
-            wc.DownloadDataAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail3.php?id=" + ID));
+            response = await wc.DownloadStringTaskAsync(new Uri("https://www.kvberlin.de/60arztsuche/detail3.php?id=" + ID)).ConfigureAwait(false);
+            ParseDetails2(response);
+
+            ParsingDone(this);
         }
 
-		private void ParseDetails(Object sender, DownloadDataCompletedEventArgs e)
+		private void ParseDetails(string response)
 		{
-			var enc = Encoding.GetEncoding("iso-8859-1");
-			string response = enc.GetString(e.Result);
-
 			Match m;
 			try
 			{
@@ -131,8 +134,6 @@ namespace KVCrawler
 				m = rx_telefax.Match(response, m.Index);
 				if (m.Success)
 					Telefax = strip(m.Groups[1].Value);
-
-				ParsingDone(this);
 			}
 			catch (Exception)
 			{
@@ -141,9 +142,20 @@ namespace KVCrawler
 		}
 
 
-        private void ParseDetails2(Object sender, DownloadDataCompletedEventArgs e)
+        private void ParseDetails2(string response)
         {
+            var doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(response);
 
+            var collection = doc.DocumentNode.SelectNodes("//tr/td[1]");
+
+            foreach (var tag in collection)
+            {
+                if (tag.GetClasses().Any(x => x == "tabletext"))
+                {
+                    QsLeistungen.Add(strip(tag.FirstChild.InnerText));
+                }
+            }
         }
 
 

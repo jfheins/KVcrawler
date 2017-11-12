@@ -82,16 +82,23 @@ namespace KVCrawler
 
         internal void AddArzt(Arzt a)
         {
-            ArztList.Add(a);
-
-            if (db == null)
+            if (InvokeRequired)
             {
-                save_btn.Enabled = true;
+                Invoke((Action)(() => AddArzt(a)));
             }
             else
             {
-                a.InsertIntoDB(db);
-            }    
+                ArztList.Add(a);
+
+                if (db == null)
+                {
+                    save_btn.Enabled = true;
+                }
+                else
+                {
+                    a.InsertIntoDB(db);
+                }
+            }
         }
 
         private void UpdateThreads()
@@ -106,7 +113,7 @@ namespace KVCrawler
 
         private void start_btn_Click(object sender, EventArgs e)
         {
-            foreach (var line in textBox1.Lines)
+            foreach (var line in textBox1.Lines.Reverse())
             {
                 todo.Push(new Workitem() { Plz = int.Parse(line.Substring(0, 5)), Start = 1, recurse = true });
             }
@@ -134,13 +141,13 @@ namespace KVCrawler
             //var fs = new StreamWriter(@"D:\daten.txt");
             //xml.Serialize(fs, ArztList);
             //fs.Close();
-            
-            
+
+
             db = Arzt.createDB();
             if (db != null)
             {
                 save_btn.Enabled = false;
-                
+
                 foreach (var item in ArztList)
                     item.InsertIntoDB(db);
             }
@@ -148,7 +155,7 @@ namespace KVCrawler
             {
                 save_btn.Enabled = true;
             }
-           
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -174,7 +181,7 @@ namespace KVCrawler
             lbl_gender.Text = a.Geschlecht.ToString();
             lbl_fach.Text = string.Join(", ", a.Fach);
             lbl_schwerp.Text = string.Join(", ", a.Schwerp);
-            lbl_zusatz.Text = string.Join(", ", a.Zusatz);
+            lbl_zusatz.Text = string.Join("\r\n", a.Zusatz);
         }
     }
 
