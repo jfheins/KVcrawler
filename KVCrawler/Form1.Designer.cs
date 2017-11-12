@@ -47,6 +47,7 @@
             this.lbl_zusatz = new System.Windows.Forms.Label();
             this.lbl_schwerp = new System.Windows.Forms.Label();
             this.lbl_plz = new System.Windows.Forms.Label();
+            this.lbl_pending = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.threads_num)).BeginInit();
             this.SuspendLayout();
             // 
@@ -257,11 +258,21 @@
             this.lbl_plz.TabIndex = 23;
             this.lbl_plz.Text = "label5";
             // 
+            // lbl_pending
+            // 
+            this.lbl_pending.AutoSize = true;
+            this.lbl_pending.Location = new System.Drawing.Point(304, 53);
+            this.lbl_pending.Name = "lbl_pending";
+            this.lbl_pending.Size = new System.Drawing.Size(16, 13);
+            this.lbl_pending.TabIndex = 24;
+            this.lbl_pending.Text = "   ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(865, 557);
+            this.Controls.Add(this.lbl_pending);
             this.Controls.Add(this.lbl_plz);
             this.Controls.Add(this.lbl_zusatz);
             this.Controls.Add(this.lbl_schwerp);
@@ -309,6 +320,7 @@
         private System.Windows.Forms.Label lbl_zusatz;
         private System.Windows.Forms.Label lbl_schwerp;
         private System.Windows.Forms.Label lbl_plz;
+        private System.Windows.Forms.Label lbl_pending;
     }
 }
 

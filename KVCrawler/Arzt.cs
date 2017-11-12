@@ -19,13 +19,16 @@ namespace KVCrawler
 		public List<string> Fach { get; set; }
 		public List<string> Schwerp { get; set; }
 		public List<string> Zusatz { get; set; }
-		public bool Hausarzt { get; set; }
+        public string Fachgebiete => string.Join("; ", Fach);
+        public string Schwerpunkte => string.Join("; ", Schwerp);
+        public string Zusatzbezeichner => string.Join("; ", Zusatz);
+
+        public bool Hausarzt { get; set; }
 		public string Straße { get; set; }
 		public int Plz { get; set; }
 		public string Ort { get; set; }
 		public string Telefon { get; set; }
 		public string Telefax { get; set; }
-
         public List<string> QsLeistungen { get; set; }
 
         public event ArztAddCallback ParsingDone;
@@ -51,7 +54,6 @@ namespace KVCrawler
 		{
 			ID = id;
 			Plz = plz;
-			RetrieveDetailsAsync();
 		}
 
 		public Arzt()
@@ -62,7 +64,7 @@ namespace KVCrawler
             QsLeistungen = new List<string>();
         }
 
-		public async void RetrieveDetailsAsync()
+		public async Task RetrieveDetailsAsync()
 		{
             // Allgemeine Details
 			var wc = new WebClient();
@@ -162,86 +164,6 @@ namespace KVCrawler
         public override string ToString()
 		{
 			return string.Format("{0} - {1}", ID, Name);
-		}
-
-		// Fügt den Arzt in die Datenbank ein
-		public bool InsertIntoDB(System.Data.OleDb.OleDbConnection db)
-		{
-			bool retVal = true;
-
-			string strSQL = "INSERT INTO AerzteVZ " +
-			                "('ArztName','Geschlecht','Fach','Schwerpunkte','Zusatz','Hausarzt','Plz','Ort','Strasse','Tel','Fax','Link')" +
-			                "VALUES ('" + Name + "','" + Geschlecht.ToString() + "','" + string.Join(", ", Fach) +"','" + string.Join(", ", Schwerp) +
-			                "','" + string.Join(", ", Zusatz) + "','" + (Hausarzt ? 'J' : 'N') + "'," + Plz.ToString() +
-			                ",'" + Ort + "','" + Straße + "','" + Telefon + "','" + Telefax + "','http://www.kvberlin.de/60arztsuche/detail1.php?id=" + ID.ToString() + "');";
-
-			System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand(strSQL, db);
-
-			try
-			{
-				int zeilen = cmd.ExecuteNonQuery();
-			}
-			catch (System.InvalidOperationException ex)
-			{
-				MessageBox.Show("Datensatz konnte nicht geschrieben werden!\n\n" + ex.Message);
-				retVal = false;
-			}
-
-			return retVal;
-		}
-
-		// Öffnet einen File-Dialog um eine Datenbankdatei zu erstellen und zu öffnen.
-		// Gibt das Handle zur geöffneten DB zurück oder NULL wenn keine DB geöffnet werden konnte.
-		public static System.Data.OleDb.OleDbConnection createDB()
-		{
-			System.Data.OleDb.OleDbConnection db = null;    // Datenbank handle, muss noch geöffnet werden
-
-			// File-dialog erstellen und anziegen lassen
-			System.Windows.Forms.OpenFileDialog file = new OpenFileDialog();
-			file.ValidateNames = true;
-			file.Filter = "Access 2003 Datenbanken (*.mdb)|*.mdb";
-			file.Title = "Datenbankdatei wählen...";
-
-			// Wenn eine Datei gewähltwurde muss diese erstellt werden
-			if (file.ShowDialog() == DialogResult.OK)
-			{
-				db = new System.Data.OleDb.OleDbConnection(
-					@"Provider=Microsoft.Jet.OLEDB.4.0;
-                                Data Source=" + file.FileName);
-				db.Open();
-
-				// SQL-Strin für die anzulegende tabelle
-				string strSQL = "CREATE TABLE AerzteVZ ( 'id' AUTOINCREMENT PRIMARY KEY," +
-				                "'ArztName' CHAR(255)," +
-				                "'Geschlecht' CHAR(6)," +
-				                "'Fach' CHAR(255)," +
-				                "'Schwerpunkte' CHAR(255)," +
-				                "'Zusatz' CHAR(255)," +
-				                "'Hausarzt' CHAR(6)," +
-				                "'Plz' INTEGER," +
-				                "'Ort' CHAR(255)," +
-				                "'Strasse' CHAR(255)," +
-				                "'Tel' CHAR(20)," +
-				                "'Fax' CHAR(20)," +
-				                "'Link' CHAR(255));";
-
-				System.Data.OleDb.OleDbCommand cmd = new System.Data.OleDb.OleDbCommand(strSQL, db);
-
-				try
-				{
-					int zeilen = cmd.ExecuteNonQuery();
-				}
-				catch (System.InvalidOperationException ex)
-				{
-					MessageBox.Show("Fehler beim erstellen der Tabelle!\n\n" + ex.Message);
-					db.Close();
-					db = null;
-				}
-				catch
-				{
-				}
-			}
-			return db;
 		}
 	}
 }

@@ -21,6 +21,7 @@ namespace KVCrawler
         Stack<Workitem> todo;
         bool proceed;
         int threads;
+        int pending = 0;
         System.Data.OleDb.OleDbConnection db = null;
 
         Regex rx_treffer = new Regex(@"<p>ergab (\d+) Treffer");
@@ -69,7 +70,10 @@ namespace KVCrawler
             var treffer = rx_arzt.Matches(response);
             foreach (Match match in treffer)
             {
-                new Arzt(int.Parse(match.Groups[1].Value), info.Plz).ParsingDone += AddArzt;
+                pending++;
+                var a = new Arzt(int.Parse(match.Groups[1].Value), info.Plz);
+                a.ParsingDone += AddArzt;
+                a.RetrieveDetailsAsync();
             }
 
             threads--;
@@ -89,15 +93,9 @@ namespace KVCrawler
             else
             {
                 ArztList.Add(a);
-
-                if (db == null)
-                {
-                    save_btn.Enabled = true;
-                }
-                else
-                {
-                    a.InsertIntoDB(db);
-                }
+                pending--;
+                save_btn.Enabled = pending == 0;
+                lbl_pending.Text = string.Format("{0} Anfragen ausstehend", pending);
             }
         }
 
@@ -109,10 +107,12 @@ namespace KVCrawler
             start_btn.Enabled = !running;
             stopp_btn.Enabled = running;
             progressBar1.Style = running ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous;
+            lbl_pending.Text = string.Format("{0} Anfragen ausstehend", pending);
         }
 
         private void start_btn_Click(object sender, EventArgs e)
         {
+            ArztList.Clear();
             foreach (var line in textBox1.Lines.Reverse())
             {
                 todo.Push(new Workitem() { Plz = int.Parse(line.Substring(0, 5)), Start = 1, recurse = true });
@@ -122,6 +122,7 @@ namespace KVCrawler
             {
                 proceed = true;
                 threads = 0;
+                pending = 0;
                 StartRequest(todo.Pop());
                 UpdateThreads();
             }
@@ -137,25 +138,47 @@ namespace KVCrawler
 
         private void save_btn_Click(object sender, EventArgs e)
         {
-            //var xml = new XmlSerializer(typeof(BindingList<Arzt>), new Type[] { typeof(Arzt), typeof(List<string>), typeof(Gender) });
-            //var fs = new StreamWriter(@"D:\daten.txt");
-            //xml.Serialize(fs, ArztList);
-            //fs.Close();
+            //var sd = new FolderBrowserDialog();
+            var sd = new Ookii.Dialogs.VistaFolderBrowserDialog();
 
-
-            db = Arzt.createDB();
-            if (db != null)
+            if (sd.ShowDialog() == DialogResult.OK)
             {
-                save_btn.Enabled = false;
-
-                foreach (var item in ArztList)
-                    item.InsertIntoDB(db);
-            }
-            else
-            {
-                save_btn.Enabled = true;
+                SaveArztCsv(Path.Combine(sd.SelectedPath, "Ärzte.csv"));
+                SaveQsCsv(Path.Combine(sd.SelectedPath, "Q-Leistungen.csv"), Path.Combine(sd.SelectedPath, "Link-Arzt-Leistung.csv"));
+                //var xml = new XmlSerializer(typeof(BindingList<Arzt>), new Type[] { typeof(Arzt), typeof(List<string>), typeof(Gender) });
+                //var fs = new StreamWriter(@"D:\daten.txt");
+                //xml.Serialize(fs, ArztList);
+                //fs.Close();
             }
 
+        }
+
+        private void SaveArztCsv(string filepath)
+        {
+            using (var stream = new StreamWriter(filepath, false, Encoding.UTF8))
+            {
+                var csv = new CsvHelper.CsvWriter(stream, new CsvHelper.Configuration.Configuration { Delimiter = ";", QuoteAllFields = true });
+                csv.WriteRecords(ArztList);
+            }
+        }
+
+        private void SaveQsCsv(string filepath, string mapFilepath)
+        {
+            var qsLeistungen = ArztList.SelectMany(a => a.QsLeistungen).Distinct().Select((val, index) => new { ID = index, Beschreibung = val }).ToList();
+            var qsMap = qsLeistungen.ToDictionary(x => x.Beschreibung, x => x.ID);
+
+            var jointable = ArztList.SelectMany(a => a.QsLeistungen, (a, l) => new { ArztID = a.ID, LeistungID = qsMap[l] });
+
+            using (var stream = new StreamWriter(filepath, false, Encoding.UTF8))
+            {
+                var csv = new CsvHelper.CsvWriter(stream, new CsvHelper.Configuration.Configuration { Delimiter = ";", QuoteAllFields = true });
+                csv.WriteRecords(qsLeistungen);
+            }
+            using (var stream = new StreamWriter(mapFilepath, false, Encoding.UTF8))
+            {
+                var csv = new CsvHelper.CsvWriter(stream, new CsvHelper.Configuration.Configuration { Delimiter = ";" });
+                csv.WriteRecords(jointable);
+            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
