@@ -321,7 +321,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.start_btn);
             this.Name = "Form1";
-            this.Text = "KV-Crawler (Version 1.1)";
+            this.Text = "KV-Crawler (Version 1.2)";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.threads_num)).EndInit();
             this.ResumeLayout(false);
