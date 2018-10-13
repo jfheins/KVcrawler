@@ -61,9 +61,54 @@ namespace Geocoding
 
 		private async void go_btn_Click(object sender, RoutedEventArgs e)
 		{
+			if (mode_dist_rbtn.IsChecked == true)
+			{
+				await CreateDistMatrix();
+			}
+			else
+			{
+				await ResolveAdresses();
+			}
+		}
+
+		private async Task ResolveAdresses()
+		{
+			var addressList = CleanInput();
+			progressbar.Value = 0;
+			progressbar.Maximum = addressList.Count;
+			_abortFlag = false;
+
+			var resultList = new List<Place>();
+
+			foreach (var addr in Chunk(addressList, 3))
+			{
+				var chunkResponse = addr.Select(async x => new Place{ Adress = x, Coordinates = await LookupAddressAsync (x)}).ToArray();
+				await Task.WhenAll(chunkResponse);
+				resultList.AddRange(chunkResponse.Select(x => x.Result));
+				ShowProgress(chunkResponse.Length);
+
+				if (_abortFlag)
+					return;
+			}
+
+			var csvResult = resultList.Select(p => new
+			{
+				Ort = p.Adress,
+				Koordinaten = p.Coordinates
+			});
+
+			using (var stream = new StreamWriter(savepath_txt.Text, false, Encoding.UTF8))
+			{
+				var csv = new CsvHelper.CsvWriter(stream, new CsvHelper.Configuration.Configuration { Delimiter = ";", QuoteAllFields = true });
+				csv.WriteRecords(csvResult);
+			}
+			delay_lbl.Content = "Fertig :-)";
+		}
+
+		private async Task CreateDistMatrix()
+		{
 			var addressList = CleanInput();
 			var start = start_txt.Text;
-			var resolveCoords = getCoords_chk.IsChecked ?? true;
 
 			progressbar.Value = 0;
 			// ReSharper disable once PossibleLossOfFraction
@@ -75,14 +120,14 @@ namespace Geocoding
 
 			foreach (var addr in Chunk(addressList, 10))
 			{
-				tlist.Add(await LookupDistanceAsync(start, addr.ToArray(), resolveCoords));
+				tlist.Add(await LookupDistanceAsync(start, addr.ToArray()));
 				ShowProgress(addr.Count());
 
 				if (_abortFlag)
 					return;
 			}
 
-			var results =tlist.SelectMany(x => x).ToList();
+			var results = tlist.SelectMany(x => x).ToList();
 			var csvResult = results.Select(r => new
 			{
 				Ziel = r.Destination,
@@ -125,7 +170,7 @@ namespace Geocoding
 		/// <returns>Koordinaten als String</returns>
 		private async Task<string> LookupAddressAsync(string addr, int retry = 2)
 		{
-			const string apiUrl = "http://maps.googleapis.com/maps/api/geocode/xml?address={0}&region=de&bounds=52.3,13.1|52.7,13.7";
+			var apiUrl = "https://maps.googleapis.com/maps/api/geocode/xml?address={0}&region=de&bounds=47.2,6.1|54.9,14.8&key=" + apikey_txt.Text;
 
 			await Task.Delay((int)(1.5 * _delay));
 
@@ -223,5 +268,11 @@ namespace Geocoding
 
 			savepath_txt.Text = Path.Combine(ownpath, "output.csv");
 		}
+	}
+
+	public struct Place
+	{
+		public string Adress;
+		public string Coordinates;
 	}
 }

@@ -5,18 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Geocoding"
         mc:Ignorable="d"
-        Title="MainWindow" Height="385.949" Width="580.636" Loaded="Window_Loaded">
-	<Grid>
-		<Label Content="Startadresse:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-		<TextBox x:Name="start_txt" Height="23" Margin="98,14,168,0" TextWrapping="Wrap" Text="Alexanderplatz, 10178 Berlin" VerticalAlignment="Top"/>
-		<Label Content="Zieladressen:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-		<TextBox x:Name="dest_txt" Margin="98,45,168,58" TextWrapping="NoWrap" Text="Gartenstraße 9, 10115 Berlin" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"/>
-		<CheckBox x:Name="getCoords_chk" Content="Koordinaten ermitteln" HorizontalAlignment="Right" Margin="0,16,10,0" VerticalAlignment="Top" Width="153"/>
-		<Button x:Name="go_btn" Content="Go" HorizontalAlignment="Right" Height="32" Margin="0,45,69,0" VerticalAlignment="Top" Width="94" Click="go_btn_Click"/>
-		<Label x:Name="delay_lbl" Content="Auto-Delay" HorizontalAlignment="Right" Margin="0,82,93,0" VerticalAlignment="Top"/>
-		<ProgressBar x:Name="progressbar" HorizontalAlignment="Stretch" Height="12" Margin="10,0,10,7" VerticalAlignment="Bottom" />
-		<Label Content="Speichern unter:" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top"/>
-		<TextBox x:Name="savepath_txt" Height="20" Margin="111,305,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        Title="MainWindow" Height="403.12" Width="580.636" Loaded="Window_Loaded">
+    <Grid>
+        <Label Content="Startadresse:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="start_txt" Height="23" Margin="98,14,168,0" TextWrapping="Wrap" Text="Alexanderplatz, 10178 Berlin" VerticalAlignment="Top"/>
+        <Label Content="Zieladressen:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="dest_txt" Margin="98,45,168,77" TextWrapping="NoWrap" Text="Gartenstraße 9, 10115 Berlin" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled"/>
+        <Button x:Name="go_btn" Content="Go" HorizontalAlignment="Right" Height="32" Margin="0,104,69,0" VerticalAlignment="Top" Width="94" Click="go_btn_Click"/>
+        <Label x:Name="delay_lbl" Content="Auto-Delay" HorizontalAlignment="Right" Margin="0,141,93,0" VerticalAlignment="Top"/>
+        <Label Content="API Key:" HorizontalAlignment="Left" Margin="10,0,0,49" Height="26" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="apikey_txt" Margin="111,0,10,52" TextWrapping="Wrap" Text="" Height="20" VerticalAlignment="Bottom"/>
+        <Label Content="Speichern unter:" HorizontalAlignment="Left" Margin="10,0,0,24" Height="26" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="savepath_txt" Margin="111,0,10,27" TextWrapping="Wrap" Text="" Height="20" VerticalAlignment="Bottom"/>
+        <ProgressBar x:Name="progressbar" HorizontalAlignment="Stretch" Height="12" Margin="10,0,10,7" VerticalAlignment="Bottom" />
+        <RadioButton x:Name="mode_dist_rbtn" Content="Distanzmatrix" HorizontalAlignment="Left" Margin="416,16,0,0" VerticalAlignment="Top" GroupName="mode"/>
+        <RadioButton x:Name="mode_geocode_rbtn" Content="Nur Adressen auflösen" HorizontalAlignment="Left" Margin="416,36,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="mode"/>
 
-	</Grid>
+    </Grid>
 </Window>
