@@ -31,6 +31,10 @@ namespace Geocoding
         public MainWindow()
         {
             InitializeComponent();
+            if (File.Exists("./API-Key.txt"))
+            {
+                apikey_txt.Text = File.ReadAllText("./API-Key.txt");
+            }
         }
 
         private List<string> CleanInput()
