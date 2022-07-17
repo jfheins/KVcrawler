@@ -18,8 +18,8 @@
         <Label Content="Speichern unter:" HorizontalAlignment="Left" Margin="10,0,0,24" Height="26" VerticalAlignment="Bottom"/>
         <TextBox x:Name="savepath_txt" Margin="111,0,10,27" TextWrapping="Wrap" Text="" Height="20" VerticalAlignment="Bottom"/>
         <ProgressBar x:Name="progressbar" HorizontalAlignment="Stretch" Height="12" Margin="10,0,10,7" VerticalAlignment="Bottom" />
-        <RadioButton x:Name="mode_dist_rbtn" Content="Distanzmatrix" HorizontalAlignment="Left" Margin="416,16,0,0" VerticalAlignment="Top" GroupName="mode"/>
-        <RadioButton x:Name="mode_geocode_rbtn" Content="Nur Adressen auflösen" HorizontalAlignment="Left" Margin="416,36,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="mode"/>
+        <RadioButton x:Name="mode_dist_rbtn" Content="Distanzmatrix" Margin="0,16,74,0" VerticalAlignment="Top" GroupName="mode" HorizontalAlignment="Right" Width="91"/>
+        <RadioButton x:Name="mode_geocode_rbtn" Content="Nur Adressen auflösen" Margin="0,36,26,0" VerticalAlignment="Top" IsChecked="True" GroupName="mode" HorizontalAlignment="Right" Width="139"/>
 
     </Grid>
 </Window>
